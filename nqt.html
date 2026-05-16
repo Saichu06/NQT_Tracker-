@@ -1,0 +1,1972 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="icon" type="image/png" href="logo.png">
+  <title>TCS NQT Tracker</title>
+  <link
+    href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap"
+    rel="stylesheet">
+  <style>
+    /* Light/Dark Mode Variables */
+    :root {
+      /* Dark mode (default) */
+      --bg: #0d1117;
+      --surface: #161b22;
+      --surface2: #1c2330;
+      --border: #21262d;
+      --border2: #30363d;
+      --accent: #58a6ff;
+      --accent-glow: rgba(88, 166, 255, 0.15);
+      --green: #3fb950;
+      --green-glow: rgba(63, 185, 80, 0.15);
+      --yellow: #d29922;
+      --red: #f85149;
+      --orange: #e3b341;
+      --purple: #bc8cff;
+      --text: #e6edf3;
+      --text2: #8b949e;
+      --text3: #6e7681;
+      --easy: #3fb950;
+      --medium: #d29922;
+      --hard: #f85149;
+      --tag-arr: #1f4068;
+      --tag-arr-t: #79c0ff;
+      --tag-str: #3d1f68;
+      --tag-str-t: #d2a8ff;
+      --tag-dp: #683a1f;
+      --tag-dp-t: #ffa657;
+      --tag-math: #1f4a3a;
+      --tag-math-t: #56d364;
+      --tag-tree: #4a3a1f;
+      --tag-tree-t: #e3b341;
+      --tag-graph: #3a1f1f;
+      --tag-graph-t: #ffa198;
+      --tag-sort: #1f3a4a;
+      --tag-sort-t: #70b8ff;
+      --tag-ll: #2d1f4a;
+      --tag-ll-t: #c9b1ff;
+      --tag-greedy: #3a4a1f;
+      --tag-greedy-t: #bef5cb;
+      --tag-logic: #4a1f3a;
+      --tag-logic-t: #ffb3d7;
+      --tag-sim: #1f3d3d;
+      --tag-sim-t: #76e3ea;
+    }
+
+    /* Light mode */
+    [data-theme="light"] {
+      --bg: #f6f8fa;
+      --surface: #ffffff;
+      --surface2: #f0f3f6;
+      --border: #d0d7de;
+      --border2: #e1e4e8;
+      --accent: #0969da;
+      --accent-glow: rgba(9, 105, 218, 0.08);
+      --green: #1a7f37;
+      --green-glow: rgba(26, 127, 55, 0.08);
+      --yellow: #9a6700;
+      --red: #cf222e;
+      --orange: #bc4c00;
+      --purple: #8250df;
+      --text: #1f2328;
+      --text2: #656d76;
+      --text3: #8c959f;
+      --easy: #1a7f37;
+      --medium: #9a6700;
+      --hard: #cf222e;
+      --tag-arr: #ddf4ff;
+      --tag-arr-t: #0969da;
+      --tag-str: #fbe9ff;
+      --tag-str-t: #8250df;
+      --tag-dp: #ffebda;
+      --tag-dp-t: #bc4c00;
+      --tag-math: #daf5e7;
+      --tag-math-t: #1a7f37;
+      --tag-tree: #fff0d6;
+      --tag-tree-t: #9a6700;
+      --tag-graph: #ffebe9;
+      --tag-graph-t: #cf222e;
+      --tag-sort: #ddf4ff;
+      --tag-sort-t: #0969da;
+      --tag-ll: #fbe9ff;
+      --tag-ll-t: #8250df;
+      --tag-greedy: #daf5e7;
+      --tag-greedy-t: #1a7f37;
+      --tag-logic: #ffebe9;
+      --tag-logic-t: #cf222e;
+      --tag-sim: #ddf4ff;
+      --tag-sim-t: #0969da;
+    }
+
+    *,
+    *::before,
+    *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html {
+      scroll-behavior: smooth;
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--text);
+      font-family: 'Outfit', sans-serif;
+      min-height: 100vh;
+      line-height: 1.6;
+    }
+
+    /* ═══ TOP BAR ═══ */
+    .topbar {
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      padding: 14px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      backdrop-filter: blur(12px);
+    }
+
+    .topbar-left {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .logo-badge {
+      background: linear-gradient(135deg, #58a6ff, #bc8cff);
+      color: #fff;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      font-weight: 700;
+      padding: 4px 10px;
+      border-radius: 6px;
+      letter-spacing: 1px;
+    }
+
+    .topbar h1 {
+      font-size: 16px;
+      font-weight: 700;
+      color: var(--text);
+    }
+
+    .topbar-right {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .progress-mini {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+    }
+
+    .mini-bar {
+      width: 120px;
+      height: 6px;
+      background: var(--border2);
+      border-radius: 3px;
+      overflow: hidden;
+    }
+
+    .mini-fill {
+      height: 100%;
+      background: linear-gradient(90deg, var(--accent), var(--green));
+      border-radius: 3px;
+      transition: width .4s ease;
+    }
+
+    .pct-label {
+      color: var(--green);
+      font-weight: 700;
+    }
+
+    /* ═══ MAIN LAYOUT ═══ */
+    .main {
+      max-width: 1100px;
+      margin: 0 auto;
+      padding: 28px 20px 80px;
+    }
+
+    /* ═══ STATS ═══ */
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(130px, 1fr));
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+
+    .theme-btn {
+  background: var(--surface2);
+  border: 1px solid var(--border2);
+  color: var(--text);
+  width: 36px;
+  height: 36px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-size: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+.theme-btn:hover {
+  background: var(--accent-glow);
+  border-color: var(--accent);
+  transform: scale(1.05);
+}
+
+    .stat-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 18px;
+      text-align: center;
+      transition: border-color .2s;
+    }
+
+    .stat-card:hover {
+      border-color: var(--border2);
+    }
+
+    .stat-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 26px;
+      font-weight: 700;
+      display: block;
+    }
+
+    .stat-lbl {
+      font-size: 11px;
+      color: var(--text3);
+      letter-spacing: .5px;
+      margin-top: 2px;
+    }
+
+    .s-total .stat-num {
+      color: var(--accent);
+    }
+
+    .s-done .stat-num {
+      color: var(--green);
+    }
+
+    .s-easy .stat-num {
+      color: var(--easy);
+    }
+
+    .s-med .stat-num {
+      color: var(--medium);
+    }
+
+    .s-hard .stat-num {
+      color: var(--hard);
+    }
+
+    .s-rem .stat-num {
+      color: var(--purple);
+    }
+
+    /* ═══ FILTER BAR ═══ */
+    .filter-section {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin-bottom: 20px;
+    }
+
+    .filter-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+    }
+
+    .filter-label {
+      font-size: 11px;
+      color: var(--text3);
+      font-family: 'JetBrains Mono', monospace;
+      margin-right: 4px;
+    }
+
+    .f-btn {
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--text2);
+      padding: 5px 14px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-family: 'Outfit', sans-serif;
+      font-size: 12px;
+      font-weight: 500;
+      transition: all .18s;
+    }
+
+    .f-btn:hover {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .f-btn.active {
+      border-color: var(--accent);
+      color: var(--accent);
+      background: var(--accent-glow);
+    }
+
+    .f-btn.fe.active {
+      border-color: var(--easy);
+      color: var(--easy);
+      background: rgba(63, 185, 80, .12);
+    }
+
+    .f-btn.fm.active {
+      border-color: var(--medium);
+      color: var(--medium);
+      background: rgba(210, 153, 34, .12);
+    }
+
+    .f-btn.fh.active {
+      border-color: var(--hard);
+      color: var(--hard);
+      background: rgba(248, 81, 73, .12);
+    }
+
+    .search-wrap {
+      margin-left: auto;
+    }
+
+    .search-box {
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      padding: 6px 14px;
+      border-radius: 20px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      outline: none;
+      width: 220px;
+      transition: border-color .2s;
+    }
+
+    .search-box:focus {
+      border-color: var(--accent);
+    }
+
+    .search-box::placeholder {
+      color: var(--text3);
+    }
+
+    /* ═══ SECTION HEADER ═══ */
+    .section-hdr {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin: 28px 0 10px;
+    }
+
+    .section-hdr-line {
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .section-hdr-text {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--text3);
+      white-space: nowrap;
+      padding: 0 8px;
+    }
+
+    .section-count {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--accent);
+      background: var(--accent-glow);
+      padding: 2px 8px;
+      border-radius: 10px;
+    }
+
+    /* ═══ QUESTION ROW ═══ */
+    .q-row {
+      display: grid;
+      grid-template-columns: 36px 40px 1fr auto auto auto;
+      gap: 0;
+      align-items: center;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      margin-bottom: 6px;
+      cursor: pointer;
+      transition: border-color .18s, background .18s;
+      padding: 12px 16px;
+      position: relative;
+    }
+
+    .q-row:hover {
+      border-color: var(--border2);
+      background: var(--surface2);
+    }
+
+    .q-row.done {
+      border-left: 2px solid var(--green);
+      opacity: 0.65;
+    }
+
+    .q-row.done .q-name {
+      text-decoration: line-through;
+      color: var(--text3);
+    }
+
+    .q-row.has-notes::after {
+      content: '📝';
+      position: absolute;
+      right: 200px;
+      top: 50%;
+      transform: translateY(-50%);
+      font-size: 12px;
+      opacity: 0.7;
+    }
+
+    .q-check {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .q-check input[type="checkbox"] {
+      width: 16px;
+      height: 16px;
+      accent-color: var(--green);
+      cursor: pointer;
+    }
+
+    .q-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      padding-right: 12px;
+    }
+
+    .q-info {
+      min-width: 0;
+      padding-right: 12px;
+    }
+
+    .q-name {
+      font-size: 14px;
+      font-weight: 600;
+      color: var(--text);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .q-tags {
+      display: flex;
+      gap: 4px;
+      flex-wrap: wrap;
+      margin-top: 4px;
+    }
+
+    .tag {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 1px 7px;
+      border-radius: 3px;
+      font-weight: 600;
+      letter-spacing: .3px;
+    }
+
+    .tag-arr {
+      background: var(--tag-arr);
+      color: var(--tag-arr-t);
+    }
+
+    .tag-str {
+      background: var(--tag-str);
+      color: var(--tag-str-t);
+    }
+
+    .tag-dp {
+      background: var(--tag-dp);
+      color: var(--tag-dp-t);
+    }
+
+    .tag-math {
+      background: var(--tag-math);
+      color: var(--tag-math-t);
+    }
+
+    .tag-tree {
+      background: var(--tag-tree);
+      color: var(--tag-tree-t);
+    }
+
+    .tag-graph {
+      background: var(--tag-graph);
+      color: var(--tag-graph-t);
+    }
+
+    .tag-sort {
+      background: var(--tag-sort);
+      color: var(--tag-sort-t);
+    }
+
+    .tag-ll {
+      background: var(--tag-ll);
+      color: var(--tag-ll-t);
+    }
+
+    .tag-greedy {
+      background: var(--tag-greedy);
+      color: var(--tag-greedy-t);
+    }
+
+    .tag-logic {
+      background: var(--tag-logic);
+      color: var(--tag-logic-t);
+    }
+
+    .tag-sim {
+      background: var(--tag-sim);
+      color: var(--tag-sim-t);
+    }
+
+    .q-diff-cell {
+      padding: 0 12px 0 0;
+    }
+
+    .diff-badge {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      font-weight: 700;
+      padding: 3px 9px;
+      border-radius: 4px;
+      white-space: nowrap;
+    }
+
+    .diff-E {
+      background: rgba(63, 185, 80, .12);
+      color: var(--easy);
+    }
+
+    .diff-M {
+      background: rgba(210, 153, 34, .12);
+      color: var(--medium);
+    }
+
+    .diff-H {
+      background: rgba(248, 81, 73, .12);
+      color: var(--hard);
+    }
+
+    .q-year {
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      color: var(--text3);
+      background: var(--border);
+      padding: 2px 8px;
+      border-radius: 4px;
+      margin-right: 10px;
+      white-space: nowrap;
+    }
+
+    .q-open-btn {
+      background: var(--surface2);
+      border: 1px solid var(--border2);
+      color: var(--accent);
+      padding: 5px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
+      cursor: pointer;
+      white-space: nowrap;
+      transition: all .18s;
+      font-family: 'Outfit', sans-serif;
+    }
+
+    .q-open-btn:hover {
+      background: var(--accent-glow);
+      border-color: var(--accent);
+    }
+
+    /* ═══ MODAL ═══ */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(1, 4, 9, .85);
+      backdrop-filter: blur(8px);
+      z-index: 200;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+    }
+
+    .modal-overlay.open {
+      display: flex;
+    }
+
+    .modal {
+      background: var(--surface);
+      border: 1px solid var(--border2);
+      border-radius: 14px;
+      width: 100%;
+      max-width: 780px;
+      max-height: 90vh;
+      overflow-y: auto;
+      box-shadow: 0 24px 80px rgba(0, 0, 0, .6);
+    }
+
+    .modal-header {
+      padding: 20px 24px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: flex-start;
+      justify-content: space-between;
+      gap: 16px;
+      position: sticky;
+      top: 0;
+      background: var(--surface);
+      z-index: 2;
+    }
+
+    .modal-title-area {
+      flex: 1;
+    }
+
+    .modal-num {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px;
+      color: var(--text3);
+      margin-bottom: 4px;
+    }
+
+    .modal-name {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1.3;
+    }
+
+    .modal-meta {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      margin-top: 8px;
+      align-items: center;
+    }
+
+    .modal-close {
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--text2);
+      width: 32px;
+      height: 32px;
+      border-radius: 6px;
+      font-size: 18px;
+      cursor: pointer;
+      line-height: 1;
+      flex-shrink: 0;
+      transition: all .18s;
+    }
+
+    .modal-close:hover {
+      background: rgba(248, 81, 73, .15);
+      border-color: var(--red);
+      color: var(--red);
+    }
+
+    .modal-body {
+      padding: 20px 24px 24px;
+    }
+
+    .modal-section {
+      margin-bottom: 20px;
+    }
+
+    .modal-section-label {
+      font-size: 11px;
+      font-family: 'JetBrains Mono', monospace;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--text3);
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .modal-section-label::after {
+      content: '';
+      flex: 1;
+      height: 1px;
+      background: var(--border);
+    }
+
+    .modal-desc {
+      font-size: 13px;
+      color: var(--text2);
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 12px 16px;
+      line-height: 1.7;
+    }
+
+    .modal-links {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+
+    .modal-link {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 8px 16px;
+      border-radius: 8px;
+      font-size: 13px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all .18s;
+      border: 1px solid;
+    }
+
+    .ml-lc {
+      background: rgba(88, 166, 255, .1);
+      color: var(--accent);
+      border-color: rgba(88, 166, 255, .3);
+    }
+
+    .ml-gfg {
+      background: rgba(63, 185, 80, .1);
+      color: var(--green);
+      border-color: rgba(63, 185, 80, .3);
+    }
+
+    .ml-hr {
+      background: rgba(210, 153, 34, .1);
+      color: var(--orange);
+      border-color: rgba(210, 153, 34, .3);
+    }
+
+    .ml-custom {
+      background: rgba(188, 140, 255, .1);
+      color: var(--purple);
+      border-color: rgba(188, 140, 255, .3);
+    }
+
+    .modal-link:hover {
+      filter: brightness(1.2);
+    }
+
+    .modal-link:target {}
+
+    /* textarea inputs */
+    .modal-textarea {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 13px;
+      resize: vertical;
+      outline: none;
+      transition: border-color .2s;
+      min-height: 110px;
+      line-height: 1.6;
+    }
+
+    .modal-textarea:focus {
+      border-color: var(--accent);
+    }
+
+    .modal-textarea::placeholder {
+      color: var(--text3);
+    }
+
+    .modal-ref-input {
+      width: 100%;
+      background: var(--bg);
+      border: 1px solid var(--border2);
+      color: var(--text);
+      border-radius: 8px;
+      padding: 10px 16px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      outline: none;
+      transition: border-color .2s;
+    }
+
+    .modal-ref-input:focus {
+      border-color: var(--purple);
+    }
+
+    /* save bar */
+    .modal-actions {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 16px 24px;
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      position: sticky;
+      bottom: 0;
+    }
+
+    .save-btn {
+      background: linear-gradient(135deg, var(--accent), var(--purple));
+      color: #fff;
+      border: none;
+      padding: 9px 28px;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 14px;
+      font-weight: 700;
+      cursor: pointer;
+      transition: filter .2s, transform .1s;
+    }
+
+    .save-btn:hover {
+      filter: brightness(1.1);
+    }
+
+    .save-btn:active {
+      transform: scale(.98);
+    }
+
+    .save-msg {
+      font-size: 12px;
+      color: var(--green);
+      font-family: 'JetBrains Mono', monospace;
+      opacity: 0;
+      transition: opacity .3s;
+    }
+
+    .save-msg.show {
+      opacity: 1;
+    }
+
+    .mark-done-btn {
+      background: transparent;
+      border: 1px solid var(--border2);
+      color: var(--text2);
+      padding: 8px 18px;
+      border-radius: 8px;
+      font-family: 'Outfit', sans-serif;
+      font-size: 13px;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all .18s;
+    }
+
+    .mark-done-btn.done-active {
+      border-color: var(--green);
+      color: var(--green);
+      background: var(--green-glow);
+    }
+
+    .mark-done-btn:hover {
+      border-color: var(--green);
+      color: var(--green);
+    }
+
+    /* ═══ EMPTY STATE ═══ */
+    .empty-state {
+      text-align: center;
+      padding: 60px 20px;
+      color: var(--text3);
+    }
+
+    .empty-state .icon {
+      font-size: 40px;
+      margin-bottom: 12px;
+    }
+
+    /* ═══ YEAR SOURCE PILL ═══ */
+    .source-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      font-size: 10px;
+      font-family: 'JetBrains Mono', monospace;
+      padding: 2px 8px;
+      border-radius: 3px;
+      background: rgba(88, 166, 255, .08);
+      color: var(--accent);
+      border: 1px solid rgba(88, 166, 255, .2);
+    }
+
+    @media (max-width: 640px) {
+      .q-row {
+        grid-template-columns: 36px 36px 1fr auto;
+        gap: 0;
+      }
+
+      .q-diff-cell {
+        display: none;
+      }
+
+      .q-year {
+        display: none;
+      }
+
+      .q-tags {
+        display: none;
+      }
+
+      .topbar h1 {
+        display: none;
+      }
+
+      .modal-links {
+        flex-direction: column;
+      }
+    }
+  </style>
+</head>
+
+<body>
+
+  <!-- TOP BAR -->
+  <div class="topbar">
+    <div class="topbar-left">
+      <div class="logo-badge">TCS NQT</div>
+      <h1>Confirmed PYQ Tracker</h1>
+    </div>
+    <div class="topbar-right">
+      <button id="theme-toggle" class="theme-btn" onclick="toggleTheme()">🌙</button>
+      <div class="progress-mini">
+        <div class="mini-bar">
+          <div class="mini-fill" id="mini-fill"></div>
+        </div>
+        <span class="pct-label" id="top-pct">0%</span>
+      </div>
+    </div>
+  </div>
+
+  <!-- MAIN -->
+  <div class="main">
+
+    <!-- STATS -->
+    <div class="stats-grid">
+      <div class="stat-card s-total"><span class="stat-num" id="s-total">75</span><span class="stat-lbl">Total</span>
+      </div>
+      <div class="stat-card s-done"><span class="stat-num" id="s-done">0</span><span class="stat-lbl">Solved</span>
+      </div>
+      <div class="stat-card s-rem"><span class="stat-num" id="s-rem">75</span><span class="stat-lbl">Remaining</span>
+      </div>
+      <div class="stat-card s-easy"><span class="stat-num" id="s-easy">0</span><span class="stat-lbl">Easy Done</span>
+      </div>
+      <div class="stat-card s-med"><span class="stat-num" id="s-med">0</span><span class="stat-lbl">Medium Done</span>
+      </div>
+      <div class="stat-card s-hard"><span class="stat-num" id="s-hard">0</span><span class="stat-lbl">Hard Done</span>
+      </div>
+    </div>
+
+    <!-- FILTER -->
+    <div class="filter-section">
+      <div class="filter-row">
+        <span class="filter-label">STATUS</span>
+        <button class="f-btn active" id="fa-all" onclick="applyFilter('all',this)">All</button>
+        <button class="f-btn" id="fa-todo" onclick="applyFilter('todo',this)">◯ Todo</button>
+        <button class="f-btn" id="fa-done" onclick="applyFilter('done',this)">✓ Solved</button>
+        <span class="filter-label" style="margin-left:8px">DIFF</span>
+        <button class="f-btn fe" id="fa-E" onclick="applyFilter('E',this)">Easy</button>
+        <button class="f-btn fm" id="fa-M" onclick="applyFilter('M',this)">Medium</button>
+        <button class="f-btn fh" id="fa-H" onclick="applyFilter('H',this)">Hard</button>
+        <span class="filter-label" style="margin-left:8px">TOPIC</span>
+        <button class="f-btn" id="fa-arr" onclick="applyFilter('arr',this)">Array</button>
+        <button class="f-btn" id="fa-str" onclick="applyFilter('str',this)">String</button>
+        <button class="f-btn" id="fa-math" onclick="applyFilter('math',this)">Math</button>
+        <button class="f-btn" id="fa-dp" onclick="applyFilter('dp',this)">DP</button>
+        <button class="f-btn" id="fa-sim" onclick="applyFilter('sim',this)">Simulation</button>
+        <div class="search-wrap">
+          <input class="search-box" type="text" id="search-box" placeholder="🔍 Search problems..."
+            oninput="renderAll()">
+        </div>
+      </div>
+    </div>
+
+    <!-- LIST -->
+    <div id="list-container"></div>
+
+  </div><!-- end main -->
+
+  <!-- MODAL -->
+  <div class="modal-overlay" id="modal-overlay" onclick="closeModal(event)">
+    <div class="modal" id="modal-box">
+      <div class="modal-header">
+        <div class="modal-title-area">
+          <div class="modal-num" id="m-num"></div>
+          <div class="modal-name" id="m-name"></div>
+          <div class="modal-meta" id="m-meta"></div>
+        </div>
+        <button class="modal-close" onclick="closeModalDirect()">✕</button>
+      </div>
+      <div class="modal-body">
+        <!-- Description -->
+        <div class="modal-section">
+          <div class="modal-section-label">Problem Description</div>
+          <div class="modal-desc" id="m-desc"></div>
+        </div>
+        <!-- Practice Links -->
+        <div class="modal-section">
+          <div class="modal-section-label">Practice Links</div>
+          <div class="modal-links" id="m-links"></div>
+        </div>
+        <!-- Solution -->
+        <div class="modal-section">
+          <div class="modal-section-label">My Solution / Code</div>
+          <textarea class="modal-textarea" id="m-solution"
+            placeholder="Paste your solution here (Python, Java, C++)...&#10;&#10;# Example:&#10;def solve():&#10;    pass"
+            rows="8"></textarea>
+        </div>
+        <!-- Notes -->
+        <div class="modal-section">
+          <div class="modal-section-label">Notes & Key Insights</div>
+          <textarea class="modal-textarea" id="m-notes"
+            placeholder="Write your notes, approach, edge cases, time complexity...&#10;&#10;e.g. Use two pointers. Edge case: empty array → return 0"
+            rows="5"></textarea>
+        </div>
+        <!-- Reference Link -->
+        <div class="modal-section">
+          <div class="modal-section-label">Reference Link (Optional)</div>
+          <input class="modal-ref-input" type="text" id="m-ref"
+            placeholder="https://youtube.com/watch?v=... or any helpful resource">
+        </div>
+      </div>
+      <div class="modal-actions">
+        <div style="display:flex;gap:10px;align-items:center;">
+          <button class="mark-done-btn" id="mark-done-btn" onclick="toggleDone()">Mark as Solved</button>
+          <span class="save-msg" id="save-msg">✓ Saved!</span>
+        </div>
+        <button class="save-btn" onclick="saveModal()">Save Notes</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ═══════════════════════════════════════════════
+    // DATA — 75 Confirmed TCS NQT PYQs
+    // Sources: PrepInsta PYQ 2023-2026, PlacementDrive March 2026,
+    //          Studocu PYQ doc, Freeresults.in, FrontlinesMedia,
+    //          GitHub TCS-NQT-CODING-SHEET, ccbp.in TCS Digital
+    // ═══════════════════════════════════════════════
+    const QUESTIONS = [
+      // ── SIMULATION / LOGIC (directly from exam, custom problems) ──
+      {
+        n: 1, cat: "Simulation & Logic",
+        name: "Two Wheeler & Four Wheeler Count",
+        diff: "E", tags: ["math", "sim"],
+        year: "2023", source: "PrepInsta PYQ Day1 S1",
+        desc: "Given total vehicles V (TW+FW) and total wheels W, find number of two-wheelers and four-wheelers. Print 'INVALID INPUT' if constraints not met. (2<=W, W%2=0, V<W)",
+        lc: "", gfg: "https://www.geeksforgeeks.org/find-two-numbers-from-their-sum-and-product/", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/question-1/"
+      },
+
+      {
+        n: 2, cat: "Simulation & Logic",
+        name: "Balance Stars and Hashes",
+        diff: "E", tags: ["str", "sim"],
+        year: "2023", source: "PrepInsta PYQ Day1 S1",
+        desc: "Given a string of '*' and '#', find the minimum additions to make counts equal. Output positive integer if *>#, negative if #>*, 0 if equal.",
+        lc: "https://leetcode.com/problems/minimum-add-to-make-parentheses-valid/", gfg: "", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/question-2/"
+      },
+
+      {
+        n: 3, cat: "Simulation & Logic",
+        name: "Count Elements Greater Than All Previous",
+        diff: "E", tags: ["arr", "sim"],
+        year: "2023", source: "PrepInsta PYQ Day1 S2",
+        desc: "Given array of size N, count elements whose value is greater than ALL prior elements. First element always counts. E.g. [7,4,8,2,9] → 3 (7, 8, 9).",
+        lc: "https://leetcode.com/problems/count-elements-with-maximum-frequency/", gfg: "https://www.geeksforgeeks.org/count-of-elements-which-are-greater-than-all-elements-to-their-left/", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/question-3/"
+      },
+
+      {
+        n: 4, cat: "Simulation & Logic",
+        name: "Parking Lot – Row with Most Filled Spaces",
+        diff: "E", tags: ["arr", "sim"],
+        year: "2023", source: "PrepInsta PYQ Day1 S2",
+        desc: "Given RxC matrix of 0s and 1s (parking spaces), find the row index with the maximum number of 1s (filled spaces).",
+        lc: "https://leetcode.com/problems/row-with-maximum-ones/", gfg: "https://www.geeksforgeeks.org/find-row-with-maximum-number-1s/", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/question-4/"
+      },
+
+      {
+        n: 5, cat: "Simulation & Logic",
+        name: "Maximum Guests on Cruise",
+        diff: "E", tags: ["arr", "sim"],
+        year: "2023", source: "PrepInsta PYQ Day2 S1",
+        desc: "Given T hours, entry E[i] and exit L[i] arrays, find maximum guests present at any instance. Track running total and return max.",
+        lc: "https://leetcode.com/problems/minimum-number-of-arrows-to-burst-balloons/", gfg: "https://www.geeksforgeeks.org/find-maximum-number-of-guests-present-in-a-party/", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/question-5/"
+      },
+
+      {
+        n: 6, cat: "Simulation & Logic",
+        name: "Balloon Color Appearing Odd Times",
+        diff: "E", tags: ["arr", "math"],
+        year: "2023", source: "PrepInsta PYQ Day2 S1",
+        desc: "Given N balloon colors, find the first color appearing odd number of times. If multiple, return first occurrence. If all even, print 'All are even'.",
+        lc: "https://leetcode.com/problems/single-number/", gfg: "https://www.geeksforgeeks.org/find-the-element-that-appears-once-in-an-array-where-every-other-element-appears-twice/", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/question-6/"
+      },
+
+      {
+        n: 7, cat: "Simulation & Logic",
+        name: "Candy Jar – Refill Logic",
+        diff: "E", tags: ["sim", "math"],
+        year: "2023", source: "PrepInsta PYQ",
+        desc: "Candy jar has N=10 max, K=5 min. Customer orders candies; if candies would fall below K, refill to full first. Output candies sold and remaining. Print 'INVALID INPUT' for 0 or >available.",
+        lc: "", gfg: "", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/jar-of-candies/"
+      },
+
+      {
+        n: 8, cat: "Simulation & Logic",
+        name: "Washing Machine Fuzzy Time Estimate",
+        diff: "E", tags: ["sim", "logic"],
+        year: "2023", source: "PrepInsta PYQ",
+        desc: "Given weight [0,7000]g: <=2000 → 25 min, 2001-4000 → 35 min, >4000 → 45 min, 0 → 0 min. >7000 → OVERLOADED. Invalid input → INVALID INPUT.",
+        lc: "", gfg: "", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/washing-machine-fuzzy-system/"
+      },
+
+      {
+        n: 9, cat: "Simulation & Logic",
+        name: "Caesar Cipher with Custom Key",
+        diff: "M", tags: ["str", "sim"],
+        year: "2023", source: "PrepInsta PYQ / PrepInsta",
+        desc: "Implement Caesar cipher for alphabets and digits 0-9 with a given shift key (1-25). Symbols like '-' remain unchanged. Key<0 → INVALID INPUT.",
+        lc: "https://leetcode.com/problems/encrypt-and-decrypt-strings/", gfg: "https://www.geeksforgeeks.org/caesar-cipher-1/", hr: "", custom: "https://prepinsta.com/caesar-cipher-coding-question/"
+      },
+
+      {
+        n: 10, cat: "Simulation & Logic",
+        name: "City Bus Ring Route Fare Calculator",
+        diff: "M", tags: ["sim", "math", "arr"],
+        year: "2023", source: "PrepInsta PYQ",
+        desc: "Circular bus route with N stops. Distance array Path[]. Fare: d<=1000 → 5 INR; d>1000 → 5 + ceil((d-1000)/200) extra. Compute fare for source to destination.",
+        lc: "", gfg: "", hr: "", custom: "https://prepinsta.com/tcs-coding-questions/"
+      },
+
+      // ── MARCH 2026 EXAM ──
+      {
+        n: 11, cat: "March 2026 Actual Exam",
+        name: "Gym Membership Cost",
+        diff: "E", tags: ["sim", "logic"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "Given months, print membership cost: 1→₹2000, 2-3→₹5000, 4-6→₹9000, 9→₹12000, 12→₹15000, <0→'invalid input', 0→0, other→'Error'.",
+        lc: "", gfg: "", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      {
+        n: 12, cat: "March 2026 Actual Exam",
+        name: "Transaction Monitoring System",
+        diff: "M", tags: ["sim", "str"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "Validate N transactions (Sender, Receiver, Timestamp, Amount). Same sender-receiver pair → 'error duplication transaction'. Consecutive time gap >60s → 'fraud detected'. Else → 'all transaction are valid'.",
+        lc: "", gfg: "", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      {
+        n: 13, cat: "March 2026 Actual Exam",
+        name: "Purchase Discount Calculator",
+        diff: "E", tags: ["sim", "math"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "Given amount: <1000→5% discount, 1000-4999→10%, >=5000→15%. Print final amount to 2 decimal places.",
+        lc: "", gfg: "", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      {
+        n: 14, cat: "March 2026 Actual Exam",
+        name: "Arrange the King's Army (Count Valid Sequences)",
+        diff: "M", tags: ["sim", "logic"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "Count sequences of length N using soldiers 1..R where first=1, last=END, no two adjacent equal. Backtracking/recursion problem.",
+        lc: "https://leetcode.com/problems/count-vowels-permutation/", gfg: "", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      {
+        n: 15, cat: "March 2026 Actual Exam",
+        name: "Parking Fee Tiered Calculation",
+        diff: "E", tags: ["sim", "math"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "First 2 hrs: ₹100/hr, next 3 hrs: ₹50/hr, beyond 5: ₹20/hr. Non-integer input → ERROR. E.g. 6 hrs → 200+150+20=370.",
+        lc: "", gfg: "", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      {
+        n: 16, cat: "March 2026 Actual Exam",
+        name: "Balloon Capacity – Greedy Maximum Count",
+        diff: "M", tags: ["arr", "greedy", "sort"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "Given weights of people and a max balloon capacity, find maximum number of people that can fit. Greedy: always pick lightest person first (sort ascending, accumulate).",
+        lc: "https://leetcode.com/problems/boats-to-save-people/", gfg: "https://www.geeksforgeeks.org/fractional-knapsack-problem/", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      {
+        n: 17, cat: "March 2026 Actual Exam",
+        name: "Maximum Subset Sum ≤ K",
+        diff: "M", tags: ["arr", "dp"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "Find the maximum sum from any subset of the array such that sum does not exceed K. E.g. [2,3,5,7], K=10 → 10 (2+3+5).",
+        lc: "https://leetcode.com/problems/partition-equal-subset-sum/", gfg: "https://www.geeksforgeeks.org/subset-sum-problem/", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      {
+        n: 18, cat: "March 2026 Actual Exam",
+        name: "Minimum Cost to Connect All Nodes (MST – Kruskal's)",
+        diff: "H", tags: ["graph", "sort"],
+        year: "Mar 2026", source: "PlacementDrive Mar 2026",
+        desc: "Given V vertices and E edges with weights, find Minimum Spanning Tree cost using Kruskal's algorithm with Union-Find (DSU). Classic MST.",
+        lc: "https://leetcode.com/problems/min-cost-to-connect-all-points/", gfg: "https://www.geeksforgeeks.org/kruskals-minimum-spanning-tree-algorithm-greedy-algo-2/", hr: "", custom: "https://placementdriveinsta.in/tcs-nqt-march-2026-coding-questions/"
+      },
+
+      // ── ARRAYS (Confirmed PYQ patterns) ──
+      {
+        n: 19, cat: "Arrays",
+        name: "Move Zeroes to End (Empty Chocolate Packets)",
+        diff: "E", tags: ["arr"],
+        year: "2022-25", source: "PrepInsta / GitHub PYQ Sheet",
+        desc: "Given array, move all 0s to the end while maintaining relative order of non-zero elements. Classic TCS problem phrased as 'empty chocolate packets on conveyor belt'.",
+        lc: "https://leetcode.com/problems/move-zeroes/", gfg: "https://www.geeksforgeeks.org/move-zeroes-end-array/", hr: "https://www.hackerrank.com/challenges/arrays-left-rotation/problem", custom: ""
+      },
+
+      {
+        n: 20, cat: "Arrays",
+        name: "Second Largest Element in Array",
+        diff: "E", tags: ["arr"],
+        year: "2022-25", source: "Freeresults.in / PrepInsta PYQ",
+        desc: "Find the second largest distinct element in an array without sorting the whole array. Use two variables: largest and second_largest.",
+        lc: "https://leetcode.com/problems/find-second-maximum-value-in-an-array/", gfg: "https://www.geeksforgeeks.org/find-second-largest-element-array/", hr: "https://www.hackerrank.com/challenges/find-the-median/problem", custom: ""
+      },
+
+      {
+        n: 21, cat: "Arrays",
+        name: "Missing Number in Array (1 to N)",
+        diff: "E", tags: ["arr", "math"],
+        year: "2022-25", source: "Freeresults.in / PrepInsta PYQ",
+        desc: "Find the one missing number in an array containing 1 to N. Use sum formula: N*(N+1)/2 - actual sum = missing number.",
+        lc: "https://leetcode.com/problems/missing-number/", gfg: "https://www.geeksforgeeks.org/find-the-missing-number/", hr: "", custom: ""
+      },
+
+      {
+        n: 22, cat: "Arrays",
+        name: "Maximum Subarray Sum (Kadane's Algorithm)",
+        diff: "M", tags: ["arr", "dp"],
+        year: "2022-25", source: "Studocu PYQ Doc",
+        desc: "Find the contiguous subarray with the largest sum. Classic Kadane's algorithm: max_ending_here = max(arr[i], max_ending_here + arr[i]). Input: [-2,1,-3,4,-1,2,1,-5,4] → 6.",
+        lc: "https://leetcode.com/problems/maximum-subarray/", gfg: "https://www.geeksforgeeks.org/largest-sum-contiguous-subarray/", hr: "", custom: ""
+      },
+
+      {
+        n: 23, cat: "Arrays",
+        name: "Rotate Array by K Positions",
+        diff: "M", tags: ["arr"],
+        year: "2022-25", source: "Freeresults.in / PrepInsta",
+        desc: "Rotate an array left or right by K positions. Optimal: reverse approach in O(n) O(1). Common in TCS with both left and right variants.",
+        lc: "https://leetcode.com/problems/rotate-array/", gfg: "https://www.geeksforgeeks.org/array-rotation/", hr: "https://www.hackerrank.com/challenges/ctci-array-left-rotation/problem", custom: ""
+      },
+
+      {
+        n: 24, cat: "Arrays",
+        name: "Sort Array of 0s, 1s and 2s (Dutch National Flag)",
+        diff: "M", tags: ["arr", "sort"],
+        year: "2022-25", source: "Freeresults.in / PrepInsta PYQ",
+        desc: "Sort an array with only 0s, 1s, and 2s in O(n) single pass using three pointers (Dutch National Flag problem by Dijkstra).",
+        lc: "https://leetcode.com/problems/sort-colors/", gfg: "https://www.geeksforgeeks.org/sort-an-array-of-0s-1s-and-2s/", hr: "", custom: ""
+      },
+
+      {
+        n: 25, cat: "Arrays",
+        name: "Remove Duplicate Elements from Array",
+        diff: "E", tags: ["arr", "sort"],
+        year: "2022-25", source: "Freeresults.in",
+        desc: "Remove duplicates from sorted/unsorted array. For sorted: two-pointer in O(n). For unsorted: use HashSet. Return count of unique elements.",
+        lc: "https://leetcode.com/problems/remove-duplicates-from-sorted-array/", gfg: "https://www.geeksforgeeks.org/remove-duplicates-sorted-array/", hr: "", custom: ""
+      },
+
+      {
+        n: 26, cat: "Arrays",
+        name: "Count Frequency of Each Element",
+        diff: "E", tags: ["arr", "math"],
+        year: "2022-25", source: "Freeresults.in – #17",
+        desc: "Count how many times each element appears in array. Use HashMap/dictionary. Print element: frequency pairs. Important for TCS as it appears in many question variants.",
+        lc: "https://leetcode.com/problems/top-k-frequent-elements/", gfg: "https://www.geeksforgeeks.org/counting-frequencies-of-array-elements/", hr: "", custom: ""
+      },
+
+      {
+        n: 27, cat: "Arrays",
+        name: "Two Sum – Find Pair with Given Sum",
+        diff: "E", tags: ["arr", "math"],
+        year: "2022-25", source: "Freeresults.in – #18",
+        desc: "Find a pair of elements in array whose sum equals target. Use HashMap for O(n) solution. One of the most common interview problems.",
+        lc: "https://leetcode.com/problems/two-sum/", gfg: "https://www.geeksforgeeks.org/given-an-array-a-and-a-number-x-check-for-pair-in-a-with-sum-as-x/", hr: "https://www.hackerrank.com/challenges/pairs/problem", custom: ""
+      },
+
+      {
+        n: 28, cat: "Arrays",
+        name: "Kth Largest Element in Array",
+        diff: "M", tags: ["arr", "sort"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Find the Kth largest element in an unsorted array. Can use sorting O(nlogn), or min-heap of size K O(n log k), or QuickSelect O(n avg).",
+        lc: "https://leetcode.com/problems/kth-largest-element-in-an-array/", gfg: "https://www.geeksforgeeks.org/kth-smallestlargest-element-unsorted-array/", hr: "", custom: ""
+      },
+
+      {
+        n: 29, cat: "Arrays",
+        name: "Subarray with Given Sum",
+        diff: "M", tags: ["arr"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Find contiguous subarray with sum equal to given target. Sliding window for positive numbers; prefix sum + HashMap for mixed.",
+        lc: "https://leetcode.com/problems/subarray-sum-equals-k/", gfg: "https://www.geeksforgeeks.org/find-subarray-with-given-sum/", hr: "", custom: ""
+      },
+
+      {
+        n: 30, cat: "Arrays",
+        name: "Largest Row of 1s in Binary Matrix",
+        diff: "E", tags: ["arr"],
+        year: "2023", source: "PrepInsta PYQ Day1 S2 variant",
+        desc: "Given binary matrix, find the row index with the maximum count of 1s. If tie, return smaller index.",
+        lc: "https://leetcode.com/problems/row-with-maximum-ones/", gfg: "https://www.geeksforgeeks.org/find-row-with-maximum-number-1s/", hr: "", custom: ""
+      },
+
+      // ── STRINGS ──
+      {
+        n: 31, cat: "Strings",
+        name: "Reverse a String",
+        diff: "E", tags: ["str"],
+        year: "2022-25", source: "Freeresults.in – #4",
+        desc: "Reverse a given string. 'hello' → 'olleh'. Python: s[::-1]. Java: StringBuilder.reverse(). Also handle reversing word order.",
+        lc: "https://leetcode.com/problems/reverse-string/", gfg: "https://www.geeksforgeeks.org/reverse-a-string-in-java/", hr: "https://www.hackerrank.com/challenges/java-string-reverse/problem", custom: ""
+      },
+
+      {
+        n: 32, cat: "Strings",
+        name: "Check Palindrome (String & Number)",
+        diff: "E", tags: ["str", "math"],
+        year: "2022-25", source: "Freeresults.in – #5 / PrepInsta PYQ",
+        desc: "Check if a string or number reads same forwards and backwards. 'madam', 121 are palindromes. Cover both string and numeric variants.",
+        lc: "https://leetcode.com/problems/valid-palindrome/", gfg: "https://www.geeksforgeeks.org/c-program-check-given-string-palindrome/", hr: "https://www.hackerrank.com/challenges/game-of-thrones/problem", custom: ""
+      },
+
+      {
+        n: 33, cat: "Strings",
+        name: "Count Vowels and Consonants",
+        diff: "E", tags: ["str"],
+        year: "2022-25", source: "Freeresults.in – #6",
+        desc: "Count number of vowels (a,e,i,o,u) and consonants in a string. Handle both upper and lower case. Very commonly asked in TCS Foundation round.",
+        lc: "https://leetcode.com/problems/count-vowel-substrings-of-a-string/", gfg: "https://www.geeksforgeeks.org/count-vowels-consonants-special-characters-string/", hr: "", custom: ""
+      },
+
+      {
+        n: 34, cat: "Strings",
+        name: "Check Anagram",
+        diff: "E", tags: ["str"],
+        year: "2022-25", source: "Freeresults.in – #11 / PrepInsta",
+        desc: "Check if two strings are anagrams of each other ('listen' = 'silent'). Sort both and compare, or use frequency count.",
+        lc: "https://leetcode.com/problems/valid-anagram/", gfg: "https://www.geeksforgeeks.org/check-whether-two-strings-are-anagram-of-each-other/", hr: "https://www.hackerrank.com/challenges/anagram/problem", custom: ""
+      },
+
+      {
+        n: 35, cat: "Strings",
+        name: "Longest Palindromic Substring",
+        diff: "M", tags: ["str", "dp"],
+        year: "2022-25", source: "Studocu PYQ Doc – #1",
+        desc: "Find the longest substring that reads the same forward and backward. Input: 'babad' → 'bab' or 'aba'. Use expand-around-center O(n²) or Manacher's O(n).",
+        lc: "https://leetcode.com/problems/longest-palindromic-substring/", gfg: "https://www.geeksforgeeks.org/longest-palindrome-substring-set-1/", hr: "", custom: ""
+      },
+
+      {
+        n: 36, cat: "Strings",
+        name: "Word Break Problem",
+        diff: "M", tags: ["str", "dp"],
+        year: "2022-25", source: "Studocu PYQ Doc – #2",
+        desc: "Determine if string can be segmented into words from dictionary. s='leetcode', wordDict=['leet','code'] → True. DP solution: dp[i] = True if s[0..i] can be segmented.",
+        lc: "https://leetcode.com/problems/word-break/", gfg: "https://www.geeksforgeeks.org/word-break-problem-dp-32/", hr: "", custom: ""
+      },
+
+      {
+        n: 37, cat: "Strings",
+        name: "Reverse Words in a String",
+        diff: "M", tags: ["str"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Reverse the order of words in a string. 'the sky is blue' → 'blue is sky the'. Handle extra spaces. Split and rejoin.",
+        lc: "https://leetcode.com/problems/reverse-words-in-a-string/", gfg: "https://www.geeksforgeeks.org/reverse-words-in-a-given-string/", hr: "", custom: ""
+      },
+
+      {
+        n: 38, cat: "Strings",
+        name: "Longest Common Prefix",
+        diff: "E", tags: ["str"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Find the longest common prefix string among array of strings. ['flower','flow','flight'] → 'fl'. Compare character by character.",
+        lc: "https://leetcode.com/problems/longest-common-prefix/", gfg: "https://www.geeksforgeeks.org/longest-common-prefix-using-character-by-character-matching/", hr: "", custom: ""
+      },
+
+      {
+        n: 39, cat: "Strings",
+        name: "Roman to Integer",
+        diff: "E", tags: ["str", "math"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Convert Roman numeral string to integer. Handle subtractive notation (IV=4, IX=9). Traverse from right, subtract if current < previous.",
+        lc: "https://leetcode.com/problems/roman-to-integer/", gfg: "https://www.geeksforgeeks.org/converting-roman-numerals-decimal-lying-1-3999/", hr: "", custom: ""
+      },
+
+      // ── MATH / NUMBERS ──
+      {
+        n: 40, cat: "Math & Numbers",
+        name: "Fibonacci Series",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #1 (most repeated)",
+        desc: "Print or find the Nth Fibonacci number (0,1,1,2,3,5,8...). Iterative preferred over recursive for TCS. Handle F(0)=0, F(1)=1.",
+        lc: "https://leetcode.com/problems/fibonacci-number/", gfg: "https://www.geeksforgeeks.org/program-for-nth-fibonacci-number/", hr: "https://www.hackerrank.com/challenges/fibonacci-finding-easy/problem", custom: ""
+      },
+
+      {
+        n: 41, cat: "Math & Numbers",
+        name: "Check Prime Number",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #2 (most repeated)",
+        desc: "Check if a given number is prime. Optimized: check divisors only up to sqrt(N). Handle edge cases: N<=1 not prime, N=2 prime.",
+        lc: "https://leetcode.com/problems/count-primes/", gfg: "https://www.geeksforgeeks.org/primality-test-set-1-introduction-and-school-method/", hr: "https://www.hackerrank.com/challenges/identify-smith-numbers/problem", custom: ""
+      },
+
+      {
+        n: 42, cat: "Math & Numbers",
+        name: "Factorial of a Number",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #3",
+        desc: "Compute N! = N * (N-1) * ... * 1. Use iterative loop. Handle 0! = 1. For large N, use Python's big integers or long in Java.",
+        lc: "https://leetcode.com/problems/factorial-trailing-zeroes/", gfg: "https://www.geeksforgeeks.org/program-for-factorial-of-a-number/", hr: "https://www.hackerrank.com/challenges/extra-long-factorials/problem", custom: ""
+      },
+
+      {
+        n: 43, cat: "Math & Numbers",
+        name: "Sum of Digits of a Number",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #7",
+        desc: "Compute sum of all digits of number. 123 → 1+2+3 = 6. Extract digits using % 10 and // 10. Also relates to digital root.",
+        lc: "https://leetcode.com/problems/add-digits/", gfg: "https://www.geeksforgeeks.org/program-for-sum-of-digits/", hr: "", custom: ""
+      },
+
+      {
+        n: 44, cat: "Math & Numbers",
+        name: "Swap Two Numbers Without Third Variable",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #8",
+        desc: "Swap two numbers without a temporary variable using XOR (a^=b; b^=a; a^=b) or arithmetic (a=a+b; b=a-b; a=a-b). TCS tests understanding of bitwise ops.",
+        lc: "https://leetcode.com/problems/missing-number/", gfg: "https://www.geeksforgeeks.org/swap-two-numbers-without-using-temporary-variable/", hr: "", custom: ""
+      },
+
+      {
+        n: 45, cat: "Math & Numbers",
+        name: "GCD / HCF of Two Numbers",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #12",
+        desc: "Find Greatest Common Divisor using Euclidean algorithm: gcd(a,b) = gcd(b, a%b). Base case: gcd(a,0) = a. Also find LCM = a*b / gcd(a,b).",
+        lc: "https://leetcode.com/problems/find-greatest-common-divisor-of-array/", gfg: "https://www.geeksforgeeks.org/basic-and-extended-euclidean-algorithms/", hr: "", custom: ""
+      },
+
+      {
+        n: 46, cat: "Math & Numbers",
+        name: "Armstrong Number Check",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #14",
+        desc: "An Armstrong number equals sum of its digits each raised to power of number of digits. 153 = 1³+5³+3³ = 153. Check and verify.",
+        lc: "https://leetcode.com/problems/sum-of-digits-in-base-k/", gfg: "https://www.geeksforgeeks.org/program-find-sum-digits-number-until-sum-becomes-single-digit/", hr: "", custom: ""
+      },
+
+      {
+        n: 47, cat: "Math & Numbers",
+        name: "Count Primes from 1 to N (Sieve of Eratosthenes)",
+        diff: "M", tags: ["math"],
+        year: "2022-25", source: "Freeresults.in – #20",
+        desc: "Find all prime numbers from 1 to N using Sieve of Eratosthenes. Time: O(n log log n). Mark composites, collect unmarked. Efficient for large N.",
+        lc: "https://leetcode.com/problems/count-primes/", gfg: "https://www.geeksforgeeks.org/sieve-of-eratosthenes/", hr: "https://www.hackerrank.com/challenges/sieve-of-eratosthenes/problem", custom: ""
+      },
+
+      {
+        n: 48, cat: "Math & Numbers",
+        name: "Reverse an Integer",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Reverse digits of an integer. 123 → 321, -456 → -654. Handle overflow and negative numbers. Extract digits using modulo.",
+        lc: "https://leetcode.com/problems/reverse-integer/", gfg: "https://www.geeksforgeeks.org/write-a-c-program-to-reverse-digits-of-a-number/", hr: "", custom: ""
+      },
+
+      {
+        n: 49, cat: "Math & Numbers",
+        name: "Power of Two Check",
+        diff: "E", tags: ["math"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Check if a number is a power of 2. Trick: n & (n-1) == 0 for powers of 2. Also works for power of 3, 4 with divisibility.",
+        lc: "https://leetcode.com/problems/power-of-two/", gfg: "https://www.geeksforgeeks.org/program-to-find-whether-a-no-is-power-of-two/", hr: "", custom: ""
+      },
+
+      {
+        n: 50, cat: "Math & Numbers",
+        name: "Star Pattern Printing (Pyramid/Triangle)",
+        diff: "E", tags: ["math", "logic"],
+        year: "2022-25", source: "Freeresults.in – #13",
+        desc: "Print various star patterns: right triangle, inverted triangle, pyramid, diamond. Control with nested loops. TCS tests loop logic via pattern problems.",
+        lc: "", gfg: "https://www.geeksforgeeks.org/programs-printing-pyramid-patterns-python/", hr: "https://www.hackerrank.com/challenges/staircase/problem", custom: ""
+      },
+
+      // ── DYNAMIC PROGRAMMING ──
+      {
+        n: 51, cat: "Dynamic Programming",
+        name: "Edit Distance (Levenshtein)",
+        diff: "H", tags: ["dp", "str"],
+        year: "2022-25", source: "Studocu PYQ Doc – #3",
+        desc: "Minimum operations (insert, delete, substitute) to convert word1 to word2. 'horse' → 'ros' = 3. Classic 2D DP. dp[i][j] = min edits for first i,j chars.",
+        lc: "https://leetcode.com/problems/edit-distance/", gfg: "https://www.geeksforgeeks.org/edit-distance-dp-5/", hr: "", custom: ""
+      },
+
+      {
+        n: 52, cat: "Dynamic Programming",
+        name: "0/1 Knapsack Problem",
+        diff: "H", tags: ["dp", "arr"],
+        year: "2022-25", source: "Studocu PYQ Doc – #6",
+        desc: "Given values and weights, find maximum value that fits in knapsack of capacity W. values=[60,100,120], weights=[10,20,30], W=50 → 220. Classic DP table.",
+        lc: "https://leetcode.com/problems/partition-equal-subset-sum/", gfg: "https://www.geeksforgeeks.org/0-1-knapsack-problem-dp-10/", hr: "https://www.hackerrank.com/challenges/unbounded-knapsack/problem", custom: ""
+      },
+
+      {
+        n: 53, cat: "Dynamic Programming",
+        name: "Coin Change (Minimum Coins)",
+        diff: "M", tags: ["dp"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Find minimum number of coins to make amount. coins=[1,5,10,25], amount=36 → 3 (25+10+1). DP: dp[amount] = min(dp[amount-coin]+1).",
+        lc: "https://leetcode.com/problems/coin-change/", gfg: "https://www.geeksforgeeks.org/coin-change-dp-7/", hr: "", custom: ""
+      },
+
+      {
+        n: 54, cat: "Dynamic Programming",
+        name: "Climbing Stairs (Fibonacci DP)",
+        diff: "E", tags: ["dp", "math"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Count ways to reach Nth stair taking 1 or 2 steps at a time. N=5 → 8. Same as Fibonacci. dp[n] = dp[n-1] + dp[n-2].",
+        lc: "https://leetcode.com/problems/climbing-stairs/", gfg: "https://www.geeksforgeeks.org/count-ways-reach-nth-stair/", hr: "", custom: ""
+      },
+
+      {
+        n: 55, cat: "Dynamic Programming",
+        name: "Longest Increasing Subsequence",
+        diff: "M", tags: ["dp", "arr"],
+        year: "2022-25", source: "Studocu PYQ Doc / FrontlinesMedia",
+        desc: "Find length of longest strictly increasing subsequence. [10,9,2,5,3,7,101,18] → 4 ([2,3,7,101]). O(n²) DP or O(n log n) with binary search.",
+        lc: "https://leetcode.com/problems/longest-increasing-subsequence/", gfg: "https://www.geeksforgeeks.org/longest-increasing-subsequence-dp-3/", hr: "", custom: ""
+      },
+
+      {
+        n: 56, cat: "Dynamic Programming",
+        name: "House Robber",
+        diff: "M", tags: ["dp", "arr"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Can't rob adjacent houses. Find max money. [2,7,9,3,1] → 12 (2+9+1). dp[i] = max(dp[i-2]+nums[i], dp[i-1]).",
+        lc: "https://leetcode.com/problems/house-robber/", gfg: "https://www.geeksforgeeks.org/find-maximum-possible-stolen-value-houses/", hr: "", custom: ""
+      },
+
+      // ── SORTING & SEARCHING ──
+      {
+        n: 57, cat: "Sorting & Searching",
+        name: "Sort Array Without Built-in Sort (Bubble/Selection)",
+        diff: "E", tags: ["arr", "sort"],
+        year: "2022-25", source: "Freeresults.in – #19",
+        desc: "Implement sorting manually — Bubble Sort, Selection Sort, or Insertion Sort. TCS tests if you understand the algorithm, not just call sorted(). O(n²) is fine.",
+        lc: "https://leetcode.com/problems/sort-an-array/", gfg: "https://www.geeksforgeeks.org/bubble-sort/", hr: "https://www.hackerrank.com/challenges/ctci-bubble-sort/problem", custom: ""
+      },
+
+      {
+        n: 58, cat: "Sorting & Searching",
+        name: "Merge Two Sorted Arrays",
+        diff: "E", tags: ["arr", "sort"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Merge two sorted arrays into one sorted array. Two-pointer approach O(n+m). Also the basis of merge sort.",
+        lc: "https://leetcode.com/problems/merge-sorted-array/", gfg: "https://www.geeksforgeeks.org/merge-two-sorted-arrays/", hr: "", custom: ""
+      },
+
+      {
+        n: 59, cat: "Sorting & Searching",
+        name: "Binary Search",
+        diff: "E", tags: ["arr", "sort"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Find element in sorted array in O(log n). TCS asks to implement from scratch (not use library). Handle edge cases: element not found → -1.",
+        lc: "https://leetcode.com/problems/binary-search/", gfg: "https://www.geeksforgeeks.org/binary-search/", hr: "https://www.hackerrank.com/challenges/binary-search-tree-lowest-common-ancestor/problem", custom: ""
+      },
+
+      {
+        n: 60, cat: "Sorting & Searching",
+        name: "Search in Rotated Sorted Array",
+        diff: "M", tags: ["arr", "sort"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Search target in sorted array that's been rotated at unknown pivot. Modified binary search: determine which half is sorted, then check if target is there.",
+        lc: "https://leetcode.com/problems/search-in-rotated-sorted-array/", gfg: "https://www.geeksforgeeks.org/search-an-element-in-a-sorted-and-pivoted-array/", hr: "", custom: ""
+      },
+
+      // ── LINKED LIST ──
+      {
+        n: 61, cat: "Linked List",
+        name: "Reverse a Linked List",
+        diff: "E", tags: ["ll"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Reverse a singly linked list iteratively. Use three pointers: prev=None, curr=head, next. While curr: next=curr.next, curr.next=prev, prev=curr, curr=next.",
+        lc: "https://leetcode.com/problems/reverse-linked-list/", gfg: "https://www.geeksforgeeks.org/reverse-a-linked-list/", hr: "https://www.hackerrank.com/challenges/reverse-a-linked-list/problem", custom: ""
+      },
+
+      {
+        n: 62, cat: "Linked List",
+        name: "Detect Cycle in Linked List",
+        diff: "E", tags: ["ll"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Detect if a linked list has a cycle using Floyd's Cycle Detection (slow/fast pointer). If they meet, cycle exists. O(n) time O(1) space.",
+        lc: "https://leetcode.com/problems/linked-list-cycle/", gfg: "https://www.geeksforgeeks.org/detect-loop-in-a-linked-list/", hr: "", custom: ""
+      },
+
+      {
+        n: 63, cat: "Linked List",
+        name: "Find Middle of Linked List",
+        diff: "E", tags: ["ll"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Find the middle node of a linked list using slow and fast pointer. Fast moves 2 steps, slow moves 1. When fast reaches end, slow is at middle.",
+        lc: "https://leetcode.com/problems/middle-of-the-linked-list/", gfg: "https://www.geeksforgeeks.org/write-a-c-function-to-find-the-middle-of-the-linked-list/", hr: "", custom: ""
+      },
+
+      // ── TREES ──
+      {
+        n: 64, cat: "Trees",
+        name: "Maximum Depth of Binary Tree",
+        diff: "E", tags: ["tree"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Find the maximum depth (height) of a binary tree. Recursive: 1 + max(depth(left), depth(right)). Base: null node → 0.",
+        lc: "https://leetcode.com/problems/maximum-depth-of-binary-tree/", gfg: "https://www.geeksforgeeks.org/write-a-c-program-to-find-the-maximum-depth-or-height-of-a-tree/", hr: "", custom: ""
+      },
+
+      {
+        n: 65, cat: "Trees",
+        name: "Binary Tree Level Order Traversal (BFS)",
+        diff: "M", tags: ["tree", "graph"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Traverse binary tree level by level using a queue (BFS). Return list of lists where each inner list contains one level's values.",
+        lc: "https://leetcode.com/problems/binary-tree-level-order-traversal/", gfg: "https://www.geeksforgeeks.org/level-order-tree-traversal/", hr: "", custom: ""
+      },
+
+      {
+        n: 66, cat: "Trees",
+        name: "Binary Tree Maximum Path Sum",
+        diff: "H", tags: ["tree", "dp"],
+        year: "2022-25", source: "TalentBattle Advanced PYQ",
+        desc: "Find the maximum sum path in a binary tree (any node to any node, not necessarily through root). Use recursive DFS. The advanced TCS round asks path sum not divisible by K variant.",
+        lc: "https://leetcode.com/problems/binary-tree-maximum-path-sum/", gfg: "https://www.geeksforgeeks.org/find-maximum-path-sum-in-a-binary-tree/", hr: "", custom: ""
+      },
+
+      // ── GRAPHS ──
+      {
+        n: 67, cat: "Graphs",
+        name: "Number of Islands (BFS/DFS on Grid)",
+        diff: "M", tags: ["graph", "arr"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Count number of distinct islands (connected 1s) in 2D grid. Use DFS/BFS to mark visited cells. Flood fill approach.",
+        lc: "https://leetcode.com/problems/number-of-islands/", gfg: "https://www.geeksforgeeks.org/find-number-of-islands/", hr: "https://www.hackerrank.com/challenges/connected-cell-in-a-grid/problem", custom: ""
+      },
+
+      {
+        n: 68, cat: "Graphs",
+        name: "Breadth-First Search (BFS)",
+        diff: "M", tags: ["graph"],
+        year: "2022-25", source: "Unstop / Testbook TCS NQT guide",
+        desc: "Implement BFS on a graph. Use queue, visited set. TCS directly asks to implement BFS algorithm with level-by-level traversal.",
+        lc: "https://leetcode.com/problems/number-of-provinces/", gfg: "https://www.geeksforgeeks.org/breadth-first-search-or-bfs-for-a-graph/", hr: "https://www.hackerrank.com/challenges/bfsshortreach/problem", custom: ""
+      },
+
+      {
+        n: 69, cat: "Graphs",
+        name: "Course Schedule (Topological Sort / Cycle Detection)",
+        diff: "M", tags: ["graph"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Detect if all courses can be finished given prerequisites (i.e., no cycle in directed graph). Use topological sort with Kahn's BFS or DFS.",
+        lc: "https://leetcode.com/problems/course-schedule/", gfg: "https://www.geeksforgeeks.org/topological-sorting/", hr: "", custom: ""
+      },
+
+      // ── GREEDY / MISCELLANEOUS ──
+      {
+        n: 70, cat: "Greedy",
+        name: "Jump Game (Can Reach Last Index?)",
+        diff: "M", tags: ["arr", "greedy"],
+        year: "2022-25", source: "PrepInsta / FrontlinesMedia",
+        desc: "Given array where each element is max jump length, determine if you can reach last index. Greedy: track maxReach. If i > maxReach at any point, return False.",
+        lc: "https://leetcode.com/problems/jump-game/", gfg: "https://www.geeksforgeeks.org/jump-game/", hr: "", custom: ""
+      },
+
+      {
+        n: 71, cat: "Greedy",
+        name: "Activity Selection (Maximum Non-Overlapping Activities)",
+        diff: "M", tags: ["greedy", "sort"],
+        year: "2022-25", source: "GFG / FrontlinesMedia TCS",
+        desc: "Select maximum number of activities given start and end times. Greedy: sort by end time, always pick earliest-ending non-overlapping activity.",
+        lc: "https://leetcode.com/problems/non-overlapping-intervals/", gfg: "https://www.geeksforgeeks.org/activity-selection-problem-greedy-algo-1/", hr: "", custom: ""
+      },
+
+      // ── ADVANCED / TCS DIGITAL ──
+      {
+        n: 72, cat: "TCS Digital / Advanced",
+        name: "Find Odd Occurring Element (XOR / Binary Search)",
+        diff: "M", tags: ["arr", "math"],
+        year: "2022-25", source: "TalentBattle Advanced PYQ",
+        desc: "Array where all elements appear even times except one. Find it in O(log n). Constraint: equal elements appear in pairs, not more than 2 consecutive. Binary search variant of XOR approach.",
+        lc: "https://leetcode.com/problems/single-element-in-a-sorted-array/", gfg: "https://www.geeksforgeeks.org/find-the-element-that-appears-once-in-an-array-where-every-other-element-appears-twice/", hr: "", custom: "https://talentbattle.in/tcs/advanced-coding"
+      },
+
+      {
+        n: 73, cat: "TCS Digital / Advanced",
+        name: "Count Subsets with Sum Equal to K",
+        diff: "H", tags: ["dp", "arr"],
+        year: "2022-25", source: "TalentBattle Advanced PYQ",
+        desc: "Count all subsets of array with sum equal to given target K. DP approach: dp[i][j] = number of subsets using first i elements summing to j.",
+        lc: "https://leetcode.com/problems/combination-sum-iv/", gfg: "https://www.geeksforgeeks.org/count-of-subsets-with-sum-equal-to-x/", hr: "", custom: "https://talentbattle.in/tcs/advanced-coding"
+      },
+
+      {
+        n: 74, cat: "TCS Digital / Advanced",
+        name: "Max Sum Path Root to Leaf Not Divisible by K",
+        diff: "H", tags: ["tree", "dp"],
+        year: "2022-25", source: "TalentBattle Advanced PYQ",
+        desc: "In a binary tree, find maximum sum root-to-leaf path where sum is not divisible by K. Traverse all root-leaf paths, track sum, filter condition.",
+        lc: "https://leetcode.com/problems/binary-tree-maximum-path-sum/", gfg: "https://www.geeksforgeeks.org/find-maximum-path-sum-two-leaves-binary-tree/", hr: "", custom: "https://talentbattle.in/tcs/advanced-coding"
+      },
+
+      {
+        n: 75, cat: "TCS Digital / Advanced",
+        name: "Matrix Chain Multiplication (Burst Balloons)",
+        diff: "H", tags: ["dp"],
+        year: "2022-25", source: "Studocu PYQ Doc – #5",
+        desc: "Determine minimum multiplications needed to multiply a chain of matrices. p=[1,2,3,4] → 18. Interval DP. LeetCode equivalent is Burst Balloons.",
+        lc: "https://leetcode.com/problems/burst-balloons/", gfg: "https://www.geeksforgeeks.org/matrix-chain-multiplication-dp-8/", hr: "", custom: ""
+      },
+    ];
+
+    // ═══════════════════
+    // STATE
+    // ═══════════════════
+    let data = JSON.parse(localStorage.getItem('tcs_nqt_data') || '{}');
+    let activeFilter = 'all';
+    let currentQId = null;
+
+    function getQ(n) { return QUESTIONS.find(q => q.n === n); }
+    function getData(n) { return data[n] || { solved: false, solution: '', notes: '', ref: '' }; }
+
+    // ═══════════════════
+    // RENDER
+    // ═══════════════════
+    const CATEGORIES = [...new Set(QUESTIONS.map(q => q.cat))];
+
+    function filterQuestions() {
+      const search = document.getElementById('search-box').value.trim().toLowerCase();
+      return QUESTIONS.filter(q => {
+        const d = getData(q.n);
+        if (activeFilter === 'todo' && d.solved) return false;
+        if (activeFilter === 'done' && !d.solved) return false;
+        if (['E', 'M', 'H'].includes(activeFilter) && q.diff !== activeFilter) return false;
+        if (['arr', 'str', 'math', 'dp', 'sim'].includes(activeFilter) && !q.tags.includes(activeFilter)) return false;
+        if (search && !q.name.toLowerCase().includes(search) && !q.cat.toLowerCase().includes(search) && !q.tags.join('').includes(search)) return false;
+        return true;
+      });
+    }
+
+    function buildTag(t) {
+      const labels = { arr: 'Array', str: 'String', dp: 'DP', math: 'Math', tree: 'Tree', graph: 'Graph', sort: 'Sort', ll: 'LinkedList', greedy: 'Greedy', logic: 'Logic', sim: 'Simulation' };
+      return `<span class="tag tag-${t}">${labels[t] || t}</span>`;
+    }
+
+    function renderAll() {
+      const container = document.getElementById('list-container');
+      const filtered = filterQuestions();
+      container.innerHTML = '';
+      if (!filtered.length) {
+        container.innerHTML = `<div class="empty-state"><div class="icon">🔍</div><div>No questions match your filter</div></div>`;
+        return;
+      }
+      // Group by category
+      const bycat = {};
+      filtered.forEach(q => { if (!bycat[q.cat]) bycat[q.cat] = []; bycat[q.cat].push(q); });
+      CATEGORIES.forEach(cat => {
+        if (!bycat[cat]) return;
+        const qs = bycat[cat];
+        container.innerHTML += `
+      <div class="section-hdr">
+        <div class="section-hdr-line"></div>
+        <div class="section-hdr-text">${cat}</div>
+        <div class="section-count">${qs.length}</div>
+        <div class="section-hdr-line"></div>
+      </div>`;
+        qs.forEach(q => {
+          const d = getData(q.n);
+          const hasNotes = d.notes.trim() || d.solution.trim() || d.ref.trim();
+          container.innerHTML += `
+        <div class="q-row ${d.solved ? 'done' : ''} ${hasNotes ? 'has-notes' : ''}" onclick="openModal(${q.n})">
+          <div class="q-check"><input type="checkbox" ${d.solved ? 'checked' : ''} onclick="event.stopPropagation();quickToggle(${q.n},this)"></div>
+          <div class="q-num">${String(q.n).padStart(2, '0')}</div>
+          <div class="q-info">
+            <div class="q-name">${q.name}</div>
+            <div class="q-tags">${q.tags.map(buildTag).join('')}</div>
+          </div>
+          <div class="q-year"><span class="source-pill">${q.year}</span></div>
+          <div class="q-diff-cell"><span class="diff-badge diff-${q.diff}">${q.diff === 'E' ? 'Easy' : q.diff === 'M' ? 'Medium' : 'Hard'}</span></div>
+          <button class="q-open-btn" onclick="event.stopPropagation();openModal(${q.n})">Open →</button>
+        </div>`;
+        });
+      });
+      updateStats();
+    }
+
+    function updateStats() {
+      const solved = QUESTIONS.filter(q => getData(q.n).solved);
+      const total = QUESTIONS.length;
+      document.getElementById('s-total').textContent = total;
+      document.getElementById('s-done').textContent = solved.length;
+      document.getElementById('s-rem').textContent = total - solved.length;
+      document.getElementById('s-easy').textContent = solved.filter(q => q.diff === 'E').length;
+      document.getElementById('s-med').textContent = solved.filter(q => q.diff === 'M').length;
+      document.getElementById('s-hard').textContent = solved.filter(q => q.diff === 'H').length;
+      const pct = Math.round(solved.length / total * 100);
+      document.getElementById('top-pct').textContent = pct + '%';
+      document.getElementById('mini-fill').style.width = pct + '%';
+    }
+
+    // ═══════════════════
+    // FILTER
+    // ═══════════════════
+    function applyFilter(f, btn) {
+      activeFilter = f;
+      document.querySelectorAll('.f-btn').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      renderAll();
+    }
+
+    // ═══════════════════
+    // QUICK CHECKBOX
+    // ═══════════════════
+    function quickToggle(n, el) {
+      if (!data[n]) data[n] = { solved: false, solution: '', notes: '', ref: '' };
+      data[n].solved = el.checked;
+      localStorage.setItem('tcs_nqt_data', JSON.stringify(data));
+      const row = el.closest('.q-row');
+      if (el.checked) { row.classList.add('done'); } else { row.classList.remove('done'); }
+      updateStats();
+    }
+
+    // Theme Toggle
+function setTheme(theme) {
+  document.documentElement.setAttribute('data-theme', theme);
+  localStorage.setItem('theme', theme);
+  const btn = document.getElementById('theme-toggle');
+  if (btn) btn.textContent = theme === 'dark' ? '🌙' : '☀️';
+}
+
+function toggleTheme() {
+  const current = document.documentElement.getAttribute('data-theme') || 'dark';
+  const newTheme = current === 'dark' ? 'light' : 'dark';
+  setTheme(newTheme);
+}
+
+// Load saved theme on page load
+const savedTheme = localStorage.getItem('theme') || 'dark';
+setTheme(savedTheme);
+
+    // ═══════════════════
+    // MODAL
+    // ═══════════════════
+    function openModal(n) {
+      currentQId = n;
+      const q = getQ(n);
+      const d = getData(n);
+      // Fill header
+      document.getElementById('m-num').textContent = `#${String(n).padStart(2, '0')} · ${q.cat}`;
+      document.getElementById('m-name').textContent = q.name;
+      // Meta
+      let meta = `<span class="diff-badge diff-${q.diff}">${q.diff === 'E' ? 'Easy' : q.diff === 'M' ? 'Medium' : 'Hard'}</span>`;
+      meta += q.tags.map(buildTag).join('');
+      meta += `<span class="source-pill">📅 ${q.year}</span>`;
+      meta += `<span class="source-pill">📌 ${q.source}</span>`;
+      document.getElementById('m-meta').innerHTML = meta;
+      // Desc
+      document.getElementById('m-desc').textContent = q.desc;
+      // Links
+      let links = '';
+      if (q.lc) links += `<a class="modal-link ml-lc" href="${q.lc}" target="_blank">⚡ LeetCode</a>`;
+      if (q.gfg) links += `<a class="modal-link ml-gfg" href="${q.gfg}" target="_blank">🌿 GeeksForGeeks</a>`;
+      if (q.hr) links += `<a class="modal-link ml-hr" href="${q.hr}" target="_blank">⭐ HackerRank</a>`;
+      if (q.custom) links += `<a class="modal-link ml-custom" href="${q.custom}" target="_blank">🔗 Source / PYQ</a>`;
+      if (!links) links = `<span style="color:var(--text3);font-size:13px;">This is a custom TCS problem. Practice via the source link.</span>`;
+      document.getElementById('m-links').innerHTML = links;
+      // User data
+      document.getElementById('m-solution').value = d.solution || '';
+      document.getElementById('m-notes').value = d.notes || '';
+      document.getElementById('m-ref').value = d.ref || '';
+      // Done button
+      const btn = document.getElementById('mark-done-btn');
+      btn.textContent = d.solved ? '✓ Solved' : 'Mark as Solved';
+      btn.className = 'mark-done-btn' + (d.solved ? ' done-active' : '');
+      // Show
+      document.getElementById('modal-overlay').classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+
+    function closeModal(e) {
+      if (e.target === document.getElementById('modal-overlay')) closeModalDirect();
+    }
+    function closeModalDirect() {
+      document.getElementById('modal-overlay').classList.remove('open');
+      document.body.style.overflow = '';
+    }
+    document.addEventListener('keydown', e => { if (e.key === 'Escape') closeModalDirect(); });
+
+    function saveModal() {
+      if (!currentQId) return;
+      if (!data[currentQId]) data[currentQId] = { solved: false, solution: '', notes: '', ref: '' };
+      data[currentQId].solution = document.getElementById('m-solution').value;
+      data[currentQId].notes = document.getElementById('m-notes').value;
+      data[currentQId].ref = document.getElementById('m-ref').value;
+      localStorage.setItem('tcs_nqt_data', JSON.stringify(data));
+      const msg = document.getElementById('save-msg');
+      msg.classList.add('show');
+      setTimeout(() => msg.classList.remove('show'), 2000);
+      renderAll();
+    }
+
+    function toggleDone() {
+      if (!currentQId) return;
+      if (!data[currentQId]) data[currentQId] = { solved: false, solution: '', notes: '', ref: '' };
+      data[currentQId].solved = !data[currentQId].solved;
+      localStorage.setItem('tcs_nqt_data', JSON.stringify(data));
+      const btn = document.getElementById('mark-done-btn');
+      const s = data[currentQId].solved;
+      btn.textContent = s ? '✓ Solved' : 'Mark as Solved';
+      btn.className = 'mark-done-btn' + (s ? ' done-active' : '');
+      renderAll();
+    }
+
+    // ═══════════════════
+    // INIT
+    // ═══════════════════
+    renderAll();
+  </script>
+</body>
+
+</html>

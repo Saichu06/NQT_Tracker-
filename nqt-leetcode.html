@@ -1,0 +1,453 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TCS NQT – 50 LeetCode PYQs</title>
+<link href="https://fonts.googleapis.com/css2?family=Space+Mono:wght@400;700&family=Syne:wght@400;600;800&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0b0f1a;
+    --card: #111827;
+    --border: #1e2d45;
+    --accent: #00e5ff;
+    --accent2: #ff6b35;
+    --green: #00ff88;
+    --yellow: #ffd700;
+    --red: #ff4757;
+    --text: #e2e8f0;
+    --muted: #64748b;
+    --easy: #00c853;
+    --medium: #ff9800;
+    --hard: #f44336;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Syne', sans-serif;
+    min-height: 100vh;
+    padding: 24px 16px 60px;
+  }
+  .hero {
+    text-align: center;
+    padding: 40px 0 32px;
+    position: relative;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 50%;
+    transform: translateX(-50%);
+    width: 600px; height: 200px;
+    background: radial-gradient(ellipse at center, rgba(0,229,255,0.08) 0%, transparent 70%);
+    pointer-events: none;
+  }
+  .badge {
+    display: inline-block;
+    background: rgba(0,229,255,0.1);
+    border: 1px solid rgba(0,229,255,0.3);
+    color: var(--accent);
+    font-family: 'Space Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 2px;
+    padding: 4px 14px;
+    border-radius: 20px;
+    margin-bottom: 16px;
+  }
+  h1 {
+    font-size: clamp(28px, 6vw, 52px);
+    font-weight: 800;
+    line-height: 1.1;
+    background: linear-gradient(135deg, #ffffff 0%, var(--accent) 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .subtitle {
+    color: var(--muted);
+    margin-top: 10px;
+    font-size: 15px;
+  }
+  .stats-bar {
+    display: flex;
+    justify-content: center;
+    gap: 32px;
+    margin: 28px 0;
+    flex-wrap: wrap;
+  }
+  .stat {
+    text-align: center;
+  }
+  .stat-val {
+    font-size: 28px;
+    font-weight: 800;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+  }
+  .stat-label {
+    font-size: 11px;
+    color: var(--muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+  }
+  .progress-wrap {
+    background: var(--border);
+    border-radius: 8px;
+    height: 8px;
+    max-width: 500px;
+    margin: 0 auto 32px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent), var(--green));
+    border-radius: 8px;
+    transition: width 0.5s ease;
+    width: 0%;
+  }
+  .controls {
+    display: flex;
+    gap: 10px;
+    flex-wrap: wrap;
+    justify-content: center;
+    margin-bottom: 24px;
+  }
+  .filter-btn {
+    background: var(--card);
+    border: 1px solid var(--border);
+    color: var(--muted);
+    padding: 7px 18px;
+    border-radius: 20px;
+    cursor: pointer;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    transition: all 0.2s;
+  }
+  .filter-btn:hover, .filter-btn.active {
+    background: rgba(0,229,255,0.12);
+    border-color: var(--accent);
+    color: var(--accent);
+  }
+  .section-title {
+    font-size: 13px;
+    font-family: 'Space Mono', monospace;
+    color: var(--accent);
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    margin: 32px 0 16px;
+    padding-left: 4px;
+    border-left: 3px solid var(--accent);
+    padding-left: 12px;
+  }
+  .table-wrap {
+    overflow-x: auto;
+    border-radius: 12px;
+    border: 1px solid var(--border);
+    max-width: 960px;
+    margin: 0 auto 20px;
+  }
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  thead tr {
+    background: rgba(0,229,255,0.05);
+  }
+  th {
+    padding: 12px 16px;
+    font-size: 11px;
+    letter-spacing: 1.5px;
+    text-transform: uppercase;
+    color: var(--muted);
+    font-family: 'Space Mono', monospace;
+    text-align: left;
+    border-bottom: 1px solid var(--border);
+    white-space: nowrap;
+  }
+  td {
+    padding: 13px 16px;
+    border-bottom: 1px solid rgba(30,45,69,0.6);
+    font-size: 14px;
+    vertical-align: middle;
+  }
+  tr:last-child td { border-bottom: none; }
+  tr:hover td { background: rgba(255,255,255,0.02); }
+  .num {
+    font-family: 'Space Mono', monospace;
+    color: var(--muted);
+    font-size: 12px;
+    width: 36px;
+  }
+  .check-cell { width: 40px; text-align: center; }
+  input[type="checkbox"] {
+    width: 18px; height: 18px;
+    accent-color: var(--green);
+    cursor: pointer;
+  }
+  .q-name { font-weight: 600; max-width: 280px; }
+  .tag {
+    display: inline-block;
+    font-size: 10px;
+    font-family: 'Space Mono', monospace;
+    padding: 2px 8px;
+    border-radius: 4px;
+    margin: 2px 2px 2px 0;
+  }
+  .tag-arr  { background: rgba(0,229,255,0.1); color: var(--accent); border: 1px solid rgba(0,229,255,0.2); }
+  .tag-str  { background: rgba(255,107,53,0.1); color: var(--accent2); border: 1px solid rgba(255,107,53,0.2); }
+  .tag-dp   { background: rgba(255,215,0,0.1); color: var(--yellow); border: 1px solid rgba(255,215,0,0.2); }
+  .tag-tree { background: rgba(0,255,136,0.1); color: var(--green); border: 1px solid rgba(0,255,136,0.2); }
+  .tag-math { background: rgba(147,51,234,0.1); color: #c084fc; border: 1px solid rgba(147,51,234,0.2); }
+  .tag-graph{ background: rgba(244,67,54,0.12); color: #ff8a80; border: 1px solid rgba(244,67,54,0.2); }
+  .tag-sort { background: rgba(236,72,153,0.1); color: #f472b6; border: 1px solid rgba(236,72,153,0.2); }
+  .tag-bs   { background: rgba(99,102,241,0.1); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.2); }
+  .tag-ll   { background: rgba(20,184,166,0.1); color: #5eead4; border: 1px solid rgba(20,184,166,0.2); }
+  .diff {
+    display: inline-block;
+    font-size: 11px;
+    font-family: 'Space Mono', monospace;
+    padding: 3px 10px;
+    border-radius: 20px;
+    font-weight: 700;
+  }
+  .E { background: rgba(0,200,83,0.12); color: var(--easy); }
+  .M { background: rgba(255,152,0,0.12); color: var(--medium); }
+  .H { background: rgba(244,67,54,0.12); color: var(--hard); }
+  a.lc-link {
+    color: var(--accent);
+    text-decoration: none;
+    font-family: 'Space Mono', monospace;
+    font-size: 12px;
+    padding: 4px 12px;
+    border: 1px solid rgba(0,229,255,0.3);
+    border-radius: 6px;
+    transition: all 0.2s;
+    white-space: nowrap;
+  }
+  a.lc-link:hover {
+    background: rgba(0,229,255,0.1);
+    border-color: var(--accent);
+  }
+  .done-row td { opacity: 0.45; }
+  .done-row td .q-name { text-decoration: line-through; }
+  .footer-note {
+    text-align: center;
+    color: var(--muted);
+    font-size: 12px;
+    font-family: 'Space Mono', monospace;
+    margin-top: 40px;
+  }
+  @media(max-width:600px) {
+    .tags-cell, th:nth-child(4), td:nth-child(4) { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="badge">TCS NQT PYQ TRACKER</div>
+  <h1>50 LeetCode Questions<br>Asked in TCS NQT</h1>
+  <p class="subtitle">Based on PYQ reports & student compilations from 2022–2026</p>
+</div>
+
+<div class="stats-bar">
+  <div class="stat">
+    <div class="stat-val" id="done-count">0</div>
+    <div class="stat-label">Solved</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="rem-count">50</div>
+    <div class="stat-label">Remaining</div>
+  </div>
+  <div class="stat">
+    <div class="stat-val" id="pct">0%</div>
+    <div class="stat-label">Progress</div>
+  </div>
+</div>
+<div class="progress-wrap"><div class="progress-fill" id="prog-fill"></div></div>
+
+<div class="controls" style="max-width:960px;margin:0 auto 24px;">
+  <button class="filter-btn active" onclick="filterAll(this)">All (50)</button>
+  <button class="filter-btn" onclick="filterDiff(this,'E')">Easy</button>
+  <button class="filter-btn" onclick="filterDiff(this,'M')">Medium</button>
+  <button class="filter-btn" onclick="filterDiff(this,'H')">Hard</button>
+  <button class="filter-btn" onclick="filterDone(this)">✓ Done</button>
+  <button class="filter-btn" onclick="filterTodo(this)">◯ Todo</button>
+</div>
+
+<div style="max-width:960px;margin:0 auto;">
+
+<!-- SECTION 1: Arrays -->
+<div class="section-title">Arrays</div>
+<div class="table-wrap">
+<table id="main-table">
+<thead>
+  <tr>
+    <th class="check-cell">✓</th>
+    <th>#</th>
+    <th>Problem</th>
+    <th class="tags-cell">Topic Tags</th>
+    <th>Difficulty</th>
+    <th>LeetCode</th>
+  </tr>
+</thead>
+<tbody id="tbody">
+</tbody>
+</table>
+</div>
+
+</div>
+
+<div class="footer-note">
+  Progress auto-saved in browser · Sources: Studocu PYQ doc, PrepInsta, PlacementDrive, TalentBattle, student reports 2022–2026
+</div>
+
+<script>
+const questions = [
+  // ── ARRAYS ──
+  {n:1,  name:"Move Zeroes",                   diff:"E", tags:["arr"],       url:"https://leetcode.com/problems/move-zeroes/"},
+  {n:2,  name:"Second Largest Element in Array",diff:"E", tags:["arr"],       url:"https://leetcode.com/problems/find-second-maximum-value-in-an-array/"},
+  {n:3,  name:"Missing Number",                diff:"E", tags:["arr","math"], url:"https://leetcode.com/problems/missing-number/"},
+  {n:4,  name:"Maximum Subarray (Kadane's)",   diff:"M", tags:["arr","dp"],   url:"https://leetcode.com/problems/maximum-subarray/"},
+  {n:5,  name:"Rotate Array",                  diff:"M", tags:["arr"],        url:"https://leetcode.com/problems/rotate-array/"},
+  {n:6,  name:"Sort Colors (0s,1s,2s)",         diff:"M", tags:["arr","sort"], url:"https://leetcode.com/problems/sort-colors/"},
+  {n:7,  name:"Remove Duplicates from Sorted Array", diff:"E", tags:["arr"],  url:"https://leetcode.com/problems/remove-duplicates-from-sorted-array/"},
+  {n:8,  name:"Subarray Sum Equals K",         diff:"M", tags:["arr"],        url:"https://leetcode.com/problems/subarray-sum-equals-k/"},
+  {n:9,  name:"Count Subsets with Given Sum",  diff:"M", tags:["arr","dp"],   url:"https://leetcode.com/problems/partition-equal-subset-sum/"},
+  {n:10, name:"Find the Duplicate Number",     diff:"M", tags:["arr","bs"],   url:"https://leetcode.com/problems/find-the-duplicate-number/"},
+
+  // ── STRINGS ──
+  {n:11, name:"Longest Palindromic Substring", diff:"M", tags:["str","dp"],   url:"https://leetcode.com/problems/longest-palindromic-substring/"},
+  {n:12, name:"Word Break",                    diff:"M", tags:["str","dp"],   url:"https://leetcode.com/problems/word-break/"},
+  {n:13, name:"Valid Anagram",                 diff:"E", tags:["str"],        url:"https://leetcode.com/problems/valid-anagram/"},
+  {n:14, name:"Reverse Words in a String",     diff:"M", tags:["str"],        url:"https://leetcode.com/problems/reverse-words-in-a-string/"},
+  {n:15, name:"Longest Common Prefix",         diff:"E", tags:["str"],        url:"https://leetcode.com/problems/longest-common-prefix/"},
+  {n:16, name:"Palindrome Check (Valid Palindrome)", diff:"E", tags:["str"],  url:"https://leetcode.com/problems/valid-palindrome/"},
+  {n:17, name:"Count & Say",                   diff:"M", tags:["str"],        url:"https://leetcode.com/problems/count-and-say/"},
+  {n:18, name:"Roman to Integer",              diff:"E", tags:["str","math"], url:"https://leetcode.com/problems/roman-to-integer/"},
+
+  // ── MATH / NUMBERS ──
+  {n:19, name:"Fibonacci Number",              diff:"E", tags:["math"],       url:"https://leetcode.com/problems/fibonacci-number/"},
+  {n:20, name:"Power of Two",                  diff:"E", tags:["math"],       url:"https://leetcode.com/problems/power-of-two/"},
+  {n:21, name:"Reverse Integer",               diff:"M", tags:["math"],       url:"https://leetcode.com/problems/reverse-integer/"},
+  {n:22, name:"Palindrome Number",             diff:"E", tags:["math"],       url:"https://leetcode.com/problems/palindrome-number/"},
+  {n:23, name:"Happy Number",                  diff:"E", tags:["math"],       url:"https://leetcode.com/problems/happy-number/"},
+  {n:24, name:"Number of 1 Bits",              diff:"E", tags:["math"],       url:"https://leetcode.com/problems/number-of-1-bits/"},
+  {n:25, name:"Count Primes",                  diff:"M", tags:["math"],       url:"https://leetcode.com/problems/count-primes/"},
+
+  // ── DYNAMIC PROGRAMMING ──
+  {n:26, name:"Edit Distance",                 diff:"H", tags:["dp","str"],   url:"https://leetcode.com/problems/edit-distance/"},
+  {n:27, name:"0/1 Knapsack – Partition Equal Subset Sum", diff:"M", tags:["dp","arr"], url:"https://leetcode.com/problems/partition-equal-subset-sum/"},
+  {n:28, name:"Coin Change",                   diff:"M", tags:["dp"],         url:"https://leetcode.com/problems/coin-change/"},
+  {n:29, name:"Longest Increasing Subsequence", diff:"M", tags:["dp","arr"],  url:"https://leetcode.com/problems/longest-increasing-subsequence/"},
+  {n:30, name:"Burst Balloons (Matrix Chain Multiplication approx.)", diff:"H", tags:["dp"], url:"https://leetcode.com/problems/burst-balloons/"},
+  {n:31, name:"Climbing Stairs",               diff:"E", tags:["dp"],         url:"https://leetcode.com/problems/climbing-stairs/"},
+  {n:32, name:"House Robber",                  diff:"M", tags:["dp"],         url:"https://leetcode.com/problems/house-robber/"},
+
+  // ── SORTING & SEARCHING ──
+  {n:33, name:"Merge Sorted Array",            diff:"E", tags:["arr","sort"], url:"https://leetcode.com/problems/merge-sorted-array/"},
+  {n:34, name:"Search in Rotated Sorted Array",diff:"M", tags:["arr","bs"],   url:"https://leetcode.com/problems/search-in-rotated-sorted-array/"},
+  {n:35, name:"Kth Largest Element in Array",  diff:"M", tags:["arr","sort"], url:"https://leetcode.com/problems/kth-largest-element-in-an-array/"},
+  {n:36, name:"Top K Frequent Elements",       diff:"M", tags:["arr","sort"], url:"https://leetcode.com/problems/top-k-frequent-elements/"},
+
+  // ── TREES ──
+  {n:37, name:"Maximum Depth of Binary Tree",  diff:"E", tags:["tree"],       url:"https://leetcode.com/problems/maximum-depth-of-binary-tree/"},
+  {n:38, name:"Binary Tree Level Order Traversal (BFS)", diff:"M", tags:["tree","graph"], url:"https://leetcode.com/problems/binary-tree-level-order-traversal/"},
+  {n:39, name:"Lowest Common Ancestor of BST", diff:"M", tags:["tree"],       url:"https://leetcode.com/problems/lowest-common-ancestor-of-a-binary-search-tree/"},
+  {n:40, name:"Binary Tree Maximum Path Sum",  diff:"H", tags:["tree","dp"],  url:"https://leetcode.com/problems/binary-tree-maximum-path-sum/"},
+  {n:41, name:"Invert Binary Tree",            diff:"E", tags:["tree"],       url:"https://leetcode.com/problems/invert-binary-tree/"},
+
+  // ── LINKED LIST ──
+  {n:42, name:"Reverse Linked List",           diff:"E", tags:["ll"],         url:"https://leetcode.com/problems/reverse-linked-list/"},
+  {n:43, name:"Detect Cycle in Linked List",   diff:"E", tags:["ll"],         url:"https://leetcode.com/problems/linked-list-cycle/"},
+  {n:44, name:"Merge Two Sorted Lists",        diff:"E", tags:["ll","sort"],  url:"https://leetcode.com/problems/merge-two-sorted-lists/"},
+  {n:45, name:"Middle of the Linked List",     diff:"E", tags:["ll"],         url:"https://leetcode.com/problems/middle-of-the-linked-list/"},
+
+  // ── GRAPHS ──
+  {n:46, name:"Number of Islands",             diff:"M", tags:["graph","arr"],url:"https://leetcode.com/problems/number-of-islands/"},
+  {n:47, name:"Flood Fill",                    diff:"E", tags:["graph","arr"],url:"https://leetcode.com/problems/flood-fill/"},
+  {n:48, name:"Course Schedule (Topological Sort)", diff:"M", tags:["graph"], url:"https://leetcode.com/problems/course-schedule/"},
+
+  // ── GREEDY ──
+  {n:49, name:"Jump Game",                     diff:"M", tags:["arr","dp"],   url:"https://leetcode.com/problems/jump-game/"},
+  {n:50, name:"Minimum Cost to Connect All Points (Kruskal's)", diff:"M", tags:["graph","sort"], url:"https://leetcode.com/problems/min-cost-to-connect-all-points/"},
+];
+
+const TAG_CLASS = {arr:"tag-arr",str:"tag-str",dp:"tag-dp",tree:"tag-tree",math:"tag-math",graph:"tag-graph",sort:"tag-sort",bs:"tag-bs",ll:"tag-ll"};
+const TAG_LABEL = {arr:"Array",str:"String",dp:"DP",tree:"Tree",math:"Math",graph:"Graph",sort:"Sort",bs:"BinSearch",ll:"LinkedList"};
+
+let solved = JSON.parse(localStorage.getItem('tcs_nqt_solved') || '{}');
+let currentFilter = 'all';
+
+function renderTable(data) {
+  const tbody = document.getElementById('tbody');
+  tbody.innerHTML = '';
+  data.forEach(q => {
+    const done = !!solved[q.n];
+    const tr = document.createElement('tr');
+    tr.className = done ? 'done-row' : '';
+    tr.dataset.diff = q.diff;
+    tr.dataset.done = done ? '1' : '0';
+    tr.innerHTML = `
+      <td class="check-cell"><input type="checkbox" ${done?'checked':''} onchange="toggle(${q.n},this)"></td>
+      <td class="num">${String(q.n).padStart(2,'0')}</td>
+      <td class="q-name">${q.name}</td>
+      <td class="tags-cell">${q.tags.map(t=>`<span class="tag ${TAG_CLASS[t]||''}">${TAG_LABEL[t]||t}</span>`).join('')}</td>
+      <td><span class="diff ${q.diff}">${q.diff==='E'?'Easy':q.diff==='M'?'Medium':'Hard'}</span></td>
+      <td><a class="lc-link" href="${q.url}" target="_blank">→ Solve</a></td>
+    `;
+    tbody.appendChild(tr);
+  });
+}
+
+function toggle(n, el) {
+  if (el.checked) solved[n] = 1; else delete solved[n];
+  localStorage.setItem('tcs_nqt_solved', JSON.stringify(solved));
+  const tr = el.closest('tr');
+  tr.className = el.checked ? 'done-row' : '';
+  tr.dataset.done = el.checked ? '1' : '0';
+  const nameEl = tr.querySelector('.q-name');
+  if (el.checked) nameEl.style.textDecoration = 'line-through'; else nameEl.style.textDecoration = '';
+  updateStats();
+}
+
+function updateStats() {
+  const count = Object.keys(solved).length;
+  document.getElementById('done-count').textContent = count;
+  document.getElementById('rem-count').textContent = 50 - count;
+  const pct = Math.round(count / 50 * 100);
+  document.getElementById('pct').textContent = pct + '%';
+  document.getElementById('prog-fill').style.width = pct + '%';
+}
+
+function filterAll(btn) {
+  currentFilter = 'all';
+  setActive(btn);
+  renderTable(questions);
+}
+function filterDiff(btn, d) {
+  currentFilter = 'diff_'+d;
+  setActive(btn);
+  renderTable(questions.filter(q=>q.diff===d));
+}
+function filterDone(btn) {
+  currentFilter = 'done';
+  setActive(btn);
+  renderTable(questions.filter(q=>!!solved[q.n]));
+}
+function filterTodo(btn) {
+  currentFilter = 'todo';
+  setActive(btn);
+  renderTable(questions.filter(q=>!solved[q.n]));
+}
+function setActive(btn) {
+  document.querySelectorAll('.filter-btn').forEach(b=>b.classList.remove('active'));
+  btn.classList.add('active');
+}
+
+renderTable(questions);
+updateStats();
+</script>
+</body>
+</html>
